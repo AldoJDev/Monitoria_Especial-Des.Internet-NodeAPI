@@ -3,7 +3,7 @@
 Este é um projeto acadêmico full-stack simples que demonstra a criação de uma API RESTful com **NodeJS** e **Express** para gerenciar um cadastro de alunos, e um frontend em **HTML, CSS e JavaScript** que consome essa API utilizando a **Fetch API** nativa do navegador.
 
 A aplicação permite realizar as quatro operações básicas de um CRUD:
-*   **Create (Criar-POST):** Inserir novos alunos no banco de dados.
+*   **Create (Criar - POST):** Inserir novos alunos no banco de dados.
 *   **Read (Ler - GET):** Buscar um aluno específico pelo seu RA (Registro do Aluno).
 *   **Update (Atualizar - PUT ou PATCH):** Alterar os dados de um aluno existente.
 *   **Delete (Excluir - DELETE):** Remover um aluno do banco de dados.
