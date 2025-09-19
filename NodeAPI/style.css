@@ -1,0 +1,10 @@
+
+body { font-family: Arial, sans-serif; margin: 20px; }
+h2 { border-bottom: 2px solid #007BFF; padding-bottom: 5px; }
+.container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+label { display: block; margin-top: 10px; }
+input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+button { padding: 10px 15px; margin-top: 15px; border: none; background-color: #007BFF; color: white; cursor: pointer; border-radius: 4px; }
+button:hover { background-color: #0056b3; }
+button:disabled { background-color: #cccccc; cursor: not-allowed; }
+p { color: red; }

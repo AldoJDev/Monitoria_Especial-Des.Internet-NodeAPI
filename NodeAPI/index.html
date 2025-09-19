@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Alunos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Formulário para INSERIR um novo aluno -->
+    <div class="container">
+        <h2>Cadastrar Novo Aluno</h2>
+        <div>
+            <label for="raNovo">RA:</label>
+            <input type="number" id="raNovo" placeholder="Digite o RA">
+        </div>
+        <div>
+            <label for="nomeNovo">Nome:</label>
+            <input type="text" id="nomeNovo" placeholder="Digite o Nome">
+        </div>
+        <div>
+            <label for="cursoNovo">Código do Curso:</label>
+            <input type="number" id="cursoNovo" placeholder="Digite o código do curso">
+        </div>
+        <button onclick="inserir()">Inserir</button>
+    </div>
+
+    <!-- Formulário para BUSCAR, ALTERAR e EXCLUIR um aluno -->
+    <div class="container">
+        <h2>Gerenciar Aluno</h2>
+        <div id="main">
+            <div>
+                <label>RA:</label>
+                <input type="number" id="ra" onfocus="limpaForm()">
+                <button onclick="buscar()" id="btnBuscar">Buscar</button>
+            </div>
+            <div>
+                <label>ID:</label>
+                <input type="number" id="id" readonly>
+            </div>
+            <div>
+                <label>Nome:</label>
+                <input type="text" id="nome">
+            </div>
+            <div>
+                <label>Código do Curso:</label>
+                <input type="number" id="curso">
+            </div>
+            <button onclick="alterar()" disabled id="btnAlterar">Alterar</button>
+            <button onclick="excluir()" disabled id="btnExcluir">Excluir</button>
+            <p id="mensagem"></p>
+        </div>
+    </div>
+
+    <script>
+        const url = "http://localhost:8081";
+
+        // Função para INSERIR um novo aluno
+        async function inserir() {
+            const ra = document.getElementById("raNovo").value;
+            const nome = document.getElementById("nomeNovo").value;
+            const codcurso = document.getElementById("cursoNovo").value;
+
+            if (!ra || !nome || !codcurso) {
+                alert("Por favor, preencha todos os campos para inserir.");
+                return;
+            }
+
+            const dados = { ra, nome, codcurso };
+
+            try {
+                const response = await fetch(url + "/alunos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(dados)
+                });
+                const result = await response.json();
+                alert(result.mensagem);
+                // Limpa os campos de inserção
+                document.getElementById("raNovo").value = '';
+                document.getElementById("nomeNovo").value = '';
+                document.getElementById("cursoNovo").value = '';
+
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Erro ao inserir aluno.");
+            }
+        }
+
+        // Função para BUSCAR um aluno pelo RA
+        async function buscar() {
+            const ra = document.getElementById("ra").value;
+            if (!ra) {
+                alert("Digite um RA para buscar!");
+                return;
+            }
+
+            await fetch(`${url}/alunora/${ra}`)
+                .then(resp => {
+                    if (!resp.ok) {
+                        throw new Error('Erro na requisição');
+                    }
+                    return resp.json();
+                })
+                .then(dados => {
+                    if (dados.length == 0) {
+                        document.getElementById("mensagem").innerHTML = "RA não encontrado";
+                        limpaForm();
+                    } else {
+                        exibirDados(dados[0]);
+                    }
+                })
+                .catch(error => {
+                     document.getElementById("mensagem").innerHTML = "RA não encontrado";
+                });
+        }
+
+        function exibirDados(aluno) {
+            document.getElementById("id").value = aluno.id;
+            document.getElementById("nome").value = aluno.nome;
+            document.getElementById("curso").value = aluno.codCurso;
+
+            // Habilita botões
+            document.getElementById("btnExcluir").disabled = false;
+            document.getElementById("btnAlterar").disabled = false;
+        }
+
+        // Função para EXCLUIR o aluno encontrado
+        async function excluir() {
+            const id = document.getElementById("id").value;
+            if (!confirm("Confirma remoção deste aluno?")) {
+                return;
+            }
+
+            const opcoes = {
+                method: "DELETE"
+            };
+
+            await fetch(`${url}/alunos/${id}`, opcoes)
+                .then(resp => resp.json())
+                .then(dados => {
+                    alert(dados.mensagem);
+                    limpaForm();
+                });
+        }
+        
+        // Função para ALTERAR os dados do aluno
+        async function alterar() {
+            const id = document.getElementById("id").value;
+            const ra = document.getElementById("ra").value;
+            const nome = document.getElementById("nome").value;
+            const curso = document.getElementById("curso").value;
+
+            const opcoes = {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ra, nome, codcurso: curso })
+            };
+
+            await fetch(`${url}/alunos/${id}`, opcoes)
+                .then(resp => resp.json())
+                .then(dados => {
+                    alert(dados.mensagem);
+                    limpaForm();
+                });
+        }
+        
+        function limpaForm() {
+            document.getElementById("id").value = '';
+            document.getElementById("nome").value = '';
+            document.getElementById("curso").value = '';
+            document.getElementById("mensagem").innerHTML = '';
+            document.getElementById("btnAlterar").disabled = true;
+            document.getElementById("btnExcluir").disabled = true;
+        }
+    </script>
+</body>
+</html>
