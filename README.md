@@ -1,113 +1,109 @@
-# 📦 Monitoria Especial (Des. para Internet - NodeAPI)
+# CRUD de Alunos com NodeJS e Fetch API
 
-API REST desenvolvida em Node.js durante uma aula especial de monitoria da disciplina **Desenvolvimento para Internet**, com foco em boas práticas de arquitetura e organização de código usando **Express** e **Nodemon**.
+Este é um projeto full-stack simples que demonstra a criação de uma API RESTful com **NodeJS** e **Express** para gerenciar um cadastro de alunos, e um frontend em **HTML, CSS e JavaScript** que consome essa API utilizando a **Fetch API** nativa do navegador.
+
+A aplicação permite realizar as quatro operações básicas de um CRUD:
+*   **Create (Criar):** Inserir novos alunos no banco de dados.
+*   **Read (Ler):** Buscar um aluno específico pelo seu RA (Registro do Aluno).
+*   **Update (Atualizar):** Alterar os dados de um aluno existente.
+*   **Delete (Excluir):** Remover um aluno do banco de dados.
+
+## ✨ Funcionalidades
+
+- **Backend:** Uma API RESTful com endpoints para todas as operações CRUD.
+- **Frontend:** Uma interface de usuário simples para interagir com a API de forma intuitiva.
+- **Formulário de Cadastro:** Permite adicionar novos alunos.
+- **Formulário de Gerenciamento:** Permite buscar um aluno pelo RA e, em seguida, alterar ou excluir seus dados.
+- **Comunicação Assíncrona:** Todas as requisições para a API são feitas de forma assíncrona com `async/await` e `fetch`, proporcionando uma experiência de usuário fluida, sem recarregamento da página.
+
+## 🛠️ Tecnologias Utilizadas
+
+#### Backend
+- **Node.js:** Ambiente de execução para o JavaScript no servidor.
+- **Express.js:** Framework para criação da API e gerenciamento de rotas.
+- **MSSQL:** Driver para conectar a aplicação a um banco de dados Microsoft SQL Server.
+- **Dotenv:** Para gerenciar variáveis de ambiente de forma segura.
+- **CORS:** Middleware para permitir requisições de origens diferentes (neste caso, do arquivo HTML para a API).
+
+#### Frontend
+- **HTML5:** Estrutura da página web.
+- **CSS3:** Estilização básica para a interface.
+- **JavaScript (ES6+):** Manipulação do DOM e consumo da API com a função `fetch`.
+
+#### Banco de Dados
+- **Microsoft SQL Server**
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Como Executar o Projeto
 
-- [Node.js](https://nodejs.org/)
-- [Express](https://expressjs.com/)
-- [Nodemon](https://nodemon.io/)
+Siga os passos abaixo para configurar e rodar a aplicação em seu ambiente local.
 
----
+### Pré-requisitos
+- **Node.js e npm:** [Instale aqui](https://nodejs.org/)
+- Acesso a uma instância do **Microsoft SQL Server**.
+- Um editor de código, como o **VS Code**.
 
-## 📁 Estrutura do Projeto
+### 1. Configuração do Banco de Dados
+Execute o script `setup.sql` (disponível no projeto) em seu banco de dados SQL Server para criar a tabela `Aluno` e popular com alguns dados iniciais.
 
-```bash
-MONITORIA_ESPECIAL-DES.INTERNET-NODEAPI/
-├── controllers/
-│   └── usuarioController.js
-├── models/
-│   └── usuarioModel.js
-├── routes/
-│   └── usuarioRoutes.js
-├── server.js
-├── package.json
-├── package-lock.json
+```sql
+CREATE TABLE [dbo].[Aluno] (
+    [id]       INT          IDENTITY (1, 1) NOT NULL,
+    [ra]       CHAR (5)     NOT NULL,
+    [nome]     VARCHAR (30) NULL,
+    [codCurso] INT          NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+INSERT INTO Aluno (ra, nome, codCurso) VALUES ('20001', 'Paulo', 19);
+INSERT INTO Aluno (ra, nome, codCurso) VALUES ('20002', 'Ana', 19);
+INSERT INTO Aluno (ra, nome, codCurso) VALUES ('20003', 'Pedro', 15);
 ```
 
----
+### 2. Configuração do Backend
+1.  **Clone o repositório** ou crie a estrutura de arquivos localmente.
 
-## 🧠 Boas Práticas Aplicadas
+2.  **Crie o arquivo de ambiente:** Na raiz do projeto, crie um arquivo chamado `.env` e adicione as seguintes variáveis, substituindo os valores pelas suas credenciais do banco de dados:
+    ```env
+    PORTA=8081
+    CONNECTION_STRING=Server=seu_servidor;Database=seu_banco;User Id=seu_usuario;Password=sua_senha;TrustServerCertificate=True
+    ```
 
-Este projeto segue o padrão **MVC (Model-View-Controller)**, que promove uma separação clara de responsabilidades:
+3.  **Instale as dependências:** Abra o terminal na pasta do projeto e execute:
+    ```bash
+    npm install
+    ```
 
-### ✅ **Model**
-- Localizado em `models/usuarioModel.js`
-- Responsável por manipular os dados da aplicação.
-- Simula um banco de dados em memória.
-- Contém funções como `criar`, `buscarPorId`, `buscarPorEmail`, `atualizar` e `remover`.
+4.  **Inicie o servidor da API:**
+    ```bash
+    node index.js
+    ```
+    Se tudo estiver correto, você verá as mensagens `BD conectado com sucesso.` e `API funcionando na porta 8081!` no terminal.
 
-### ✅ **Controller**
-- Localizado em `controllers/usuarioController.js`
-- Recebe as requisições HTTP e coordena as respostas.
-- Utiliza o Model para acessar e manipular os dados.
-- Implementa validações e regras de negócio, como verificação de e-mail duplicado.
-
-### ✅ **Routes**
-- Localizado em `routes/usuarioRoutes.js`
-- Define os endpoints da API e associa cada rota ao método correspondente do Controller.
-- Mantém a lógica de roteamento separada da lógica de negócio.
-
-Essa separação facilita a manutenção, escalabilidade e reutilização do código.
+### 3. Execução do Frontend
+Abra o arquivo `index.html` diretamente no seu navegador web (Google Chrome, Firefox, etc.). A aplicação estará pronta para uso.
 
 ---
 
-## 📌 Endpoints da API
+## 📂 Estrutura do Projeto
+```
+/seu-projeto
+|-- .env                # Arquivo com as variáveis de ambiente (NÃO ENVIAR PARA O GIT)
+|-- index.html          # Interface do usuário (Frontend)
+|-- index.js            # Servidor da API (Backend)
+|-- package.json        # Metadados e dependências do projeto
+|-- package-lock.json
+|-- README.md           # Este arquivo
+```---
+## 📖 Endpoints da API
 
-| Método | Rota                   | Descrição                     |
-|--------|------------------------|-------------------------------|
-| GET    | `/usuarios/`           | Lista todos os usuários       |
-| GET    | `/usuarios/getById/:id`| Busca usuário por ID          |
-| POST   | `/usuarios/post`       | Cria novo usuário             |
-| PUT    | `/usuarios/putById/:id`| Atualiza usuário por ID       |
-| DELETE | `/usuarios/deleteById/:id`| Remove usuário por ID     |
+A API expõe os seguintes endpoints:
 
----
-
-## ▶️ Como Executar o Projeto
-
-1. Instale as dependências:
-   ```bash
-   npm install
-   ```
-
-2. Inicie o servidor com Nodemon:
-   ```bash
-   npm run dev
-   ```
-
-3. Acesse a API:
-   ```
-   http://localhost:3000/usuarios
-   ```
-
----
-
-## 🧪 Testando a API
-
-Você pode testar os endpoints usando ferramentas como:
-
-- [Postman](https://www.postman.com/)
-- [Insomnia](https://insomnia.rest/)
-
----
-
-
-
-## 📬 Contribuições
-
-Este projeto é didático e pode ser expandido com:
-
-- Integração com banco de dados real (MongoDB, PostgreSQL)
-- Autenticação com JWT
-- Validações com middleware
-- Testes automatizados
-
----
-
-## 🧾 Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
+| Método | Endpoint         | Descrição                                         | Exemplo de Body (Corpo)                                     |
+| :----- | :--------------- | :------------------------------------------------ | :---------------------------------------------------------- |
+| `GET`  | `/alunos`        | Retorna uma lista com todos os alunos.            | -                                                           |
+| `GET`  | `/alunora/:ra`   | Busca e retorna um aluno específico pelo seu RA.   | -                                                           |
+| `POST` | `/alunos`        | Cria um novo aluno.                               | `{ "ra": "12345", "nome": "Maria", "codcurso": 19 }`        |
+| `PATCH`| `/alunos/:id`    | Atualiza os dados de um aluno existente pelo ID.  | `{ "ra": "12345", "nome": "Maria Silva", "codcurso": 20 }` |
+| `DELETE`| `/alunos/:id`  | Exclui um aluno pelo seu ID.                      | -                                                           |
